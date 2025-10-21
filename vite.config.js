@@ -9,5 +9,10 @@ export default defineConfig({
     tailwindcss(),
     
   ],
+server: {
+    host: true, // This allows access from other devices on the network
+    port: 5173, // You can change this if needed
+  },
+
 
 })

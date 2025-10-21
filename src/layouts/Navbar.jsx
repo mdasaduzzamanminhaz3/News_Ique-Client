@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { Menu, X, Search, User, Moon, Sun } from "lucide-react";
 import { Link } from "react-router";
 import useFetchCategories from "../hooks/useFetctCategories";
+import useAuthContext from "../hooks/useAuthContext";
 
 const Navbar = ({ onSelectCategory, onSearch}) => {
+
+  const {user,logoutUser} = useAuthContext();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -118,6 +122,8 @@ const Navbar = ({ onSelectCategory, onSearch}) => {
             </button>
 
             {/* Profile Dropdown */}
+            <div>
+              {user ? (
             <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
@@ -138,13 +144,22 @@ const Navbar = ({ onSelectCategory, onSearch}) => {
                     </a>
                   ))}
                   <a
-                    href="#"
+                    onClick={logoutUser}
                     className="block px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Logout
                   </a>
                 </div>
               )}
+            </div>
+              ):(
+                <div className="flex gap-3">
+                  <Link to="/login" className="btn bg-blue-600 text-white">Login</Link>
+                  <Link to="/register" className="btn bg-blue-600 text-white">Register</Link>
+                </div>
+              )
+}
+
             </div>
           </div>
 
@@ -221,11 +236,26 @@ const Navbar = ({ onSelectCategory, onSearch}) => {
             </button>
 
             {/* Profile */}
+            <div>
+            {user ? (
             <div className="flex items-center justify-between mt-3 border-t dark:border-gray-700 pt-2">
               <span>User</span>
               <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600">
                 <User size={20} />
               </div>
+            </div>
+            ):(
+              <div className="flex gap-7">
+
+                <Link className="btn bg-blue-600 text-white" to="/login">Login</Link>
+                <Link className="btn bg-blue-600 text-white" to="/register">Register</Link>
+              </div>
+            )
+
+}
+
+
+
             </div>
           </div>
         </div>
