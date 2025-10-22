@@ -46,7 +46,7 @@ const useAuth = () => {
 
       return {
         success: true,
-        message: "Registration successful.Redirecting...",
+        message: "Registration successful.Check your email to activate your account.",
       };
     } catch (error) {
       if (error.response && error.response.data) {
