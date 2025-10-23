@@ -9,6 +9,8 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import PrivetRoutes from "../components/PrivetRoutes";
 import ActivateAccount from "../components/Registration/ActivateAccount";
+import DashboardLayout from "../layouts/DashboardLayout";
+import Profile from "../pages/Profile";
 
 const AppRoutes = () => {
   return (
@@ -22,14 +24,19 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
-        <Route
-          path="dashboard"
-          element={
-            <PrivetRoutes>
-              <Dashboard />
-            </PrivetRoutes>
-          }
-        />
+      </Route>
+      {/* privet routes */}
+
+      <Route
+        path="dashboard"
+        element={
+          <PrivetRoutes>
+            <DashboardLayout />
+          </PrivetRoutes>
+        }
+      >
+        <Route index element={<Dashboard />} />
+        <Route path="profile" element={<Profile/>}/>
       </Route>
     </Routes>
   );
