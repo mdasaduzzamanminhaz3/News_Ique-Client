@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import ProfileButtons from "../components/Dashboard/Profile/ProfileButtons";
 import PasswordChangeForm from "../components/Dashboard/Profile/PasswordChangeForm";
 import useAuthContext from "../hooks/useAuthContext";
+import ErrorAlert from "../components/ErrorAlert";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const { user, updateUserProfile } = useAuthContext();
+  const { user, updateUserProfile, changePassword, error } = useAuthContext();
+  const [successMsg,setSuccessMsg] = useState("");
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors,isSubmitting},
   } = useForm();
 
   useEffect(() => {
@@ -21,21 +24,52 @@ const Profile = () => {
   }, [user, setValue]);
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
-    const profilePayload = {
-      first_name: data.first_name,
-      last_name: data.last_name,
-      phone_number: data.phone_number,
-    };
-    await updateUserProfile(profilePayload);
+      //profile update
+      const profilePayload = {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        phone_number: data.phone_number,
+      };
+      await updateUserProfile(profilePayload);
+      setSuccessMsg("Profile updated successfully!");
+      //password change
+
+      if (data.current_password && data.new_password) {
+        await changePassword({
+          current_password: data.current_password,
+          new_password: data.new_password,
+        });
+        setSuccessMsg("Password changed successfully!");
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   };
 
   return (
     <div className="card w-full max-w-2xl mx-auto bg-base-100 shadow-xl">
       <div className="card-body">
+        {error && <ErrorAlert error={error} />}
+          {successMsg && (
+            <div role="alert" className="alert alert-success">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{successMsg}</span>
+            </div>
+          )}
         <h2 className="card-title text-2xl mb-4 mx-auto">
           Profile Information
         </h2>
@@ -51,7 +85,11 @@ const Profile = () => {
             isEditing={isEditing}
             watch={watch}
           />
-          <ProfileButtons isEditing={isEditing} setIsEditing={setIsEditing} />
+          <ProfileButtons
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            isSubmitting={isSubmitting}
+          />
         </form>
       </div>
     </div>
