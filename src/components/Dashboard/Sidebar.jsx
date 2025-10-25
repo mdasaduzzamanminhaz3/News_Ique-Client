@@ -1,8 +1,8 @@
+import { FaNewspaper } from "react-icons/fa";
 import {
   FiBarChart2,
   FiPackage,
   FiPlusCircle,
-  FiShoppingCart,
   FiStar,
   FiTag,
   FiUsers,
@@ -12,8 +12,8 @@ import { Link } from "react-router";
 const Sidebar = () => {
   const menuItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
-    { to: "/products", icon: FiPackage, label: "Products" },
-    { to: "/products/add", icon: FiPlusCircle, label: "Add Product" },
+    { to: "/articles", icon: FiPackage, label: "Articles" },
+    { to: "/products/add", icon: FiPlusCircle, label: "Create Article" },
     { to: "/categories", icon: FiTag, label: "Categories" },
     { to: "/categories/add", icon: FiPlusCircle, label: "Add Category" },
     { to: "/reviews", icon: FiStar, label: "Reviews" },
@@ -29,8 +29,8 @@ const Sidebar = () => {
       <aside className="menu bg-base-200 w-64 min-h-full p-4 text-base-content">
         {/* Sidebar header */}
         <div className="flex items-center gap-2 mb-6 px-2">
-          <FiShoppingCart className="h-6 w-6" />
-          <h1 className="text-xl font-bold">PhiMart</h1>
+          <FaNewspaper  className="h-6 w-6 text-blue-600" />
+          <h1 className="text-xl font-bold"><span className="text-blue-600">NEWS</span>IQUE</h1>
         </div>
 
         {/* Sidebar menu */}
@@ -47,7 +47,7 @@ const Sidebar = () => {
 
         {/* Sidebar footer */}
         <div className="mt-auto pt-6 text-xs text-base-content/70">
-          © 2025 PhiMart Admin
+          © 2025 NewsIque Admin
         </div>
       </aside>
     </div>

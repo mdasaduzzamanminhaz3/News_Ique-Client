@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Search, User} from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { Link } from "react-router";
 import useFetchCategories from "../hooks/useFetctCategories";
 import useAuthContext from "../hooks/useAuthContext";
@@ -8,7 +8,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const { user, logoutUser } = useAuthContext();
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const categories = useFetchCategories();
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,6 +33,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
             to="/"
             className="text-3xl font-bold text-blue-600 dark:text-blue-400 font-serif"
           >
+            
             NEWS<span className="text-gray-800 dark:text-gray-100">IQUE</span>
           </Link>
 
@@ -96,35 +96,49 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               About
             </Link>
 
-
-
             {/* Profile Dropdown */}
             <div>
               {user ? (
-                <div className="relative">
-                  <button
-                    onClick={() => setProfileOpen(!profileOpen)}
-                    className="bg-gray-100 dark:bg-gray-700 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"
-                  >
-                    <User size={20} />
-                  </button>
-
-                  {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg">
-                      <Link to='/profile' className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Profile
-                      </Link>
-                      <Link to='/dashboard' className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Dashboard
-                      </Link>
-                      <a
-                        onClick={logoutUser}
-                        className="block px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        Logout
-                      </a>
-                    </div>
-                  )}
+                <div className="flex-none">
+                  <div className="dropdown dropdown-end">
+                    <label
+                      tabIndex={0}
+                      className="btn btn-ghost btn-circle avatar"
+                    >
+                      <div className="w-10 rounded-full">
+                        <img
+                          alt="User avatar"
+                          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                        />
+                      </div>
+                    </label>
+                    <ul
+                      tabIndex={0}
+                      className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                    >
+                      <li>
+                        <Link to="/" className="justify-between">
+                          Home
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/dashboard" className="justify-between">
+                          Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/profile" className="justify-between">
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/settings">Settings</Link>
+                      </li>
+                      <li>
+                        <a onClick={logoutUser}>Logout</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <div className="flex gap-3">
@@ -205,16 +219,22 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               </button>
             </div>
 
-
-
             {/* Profile */}
             <div>
               {user ? (
                 <div className="flex items-center justify-between mt-3 border-t dark:border-gray-700 pt-2">
                   <span>User</span>
-                  <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600">
-                    <User size={20} />
-                  </div>
+                  <label
+                    tabIndex={0}
+                    className="btn btn-ghost btn-circle avatar"
+                  >
+                    <div className="w-10 rounded-full">
+                      <img
+                        alt="User avatar"
+                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      />
+                    </div>
+                  </label>
                 </div>
               ) : (
                 <div className="flex gap-7">

@@ -9,6 +9,7 @@ const ArticleList = ({ articles, error }) => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
+    console.log(articles);
     if (articles.length > 0) {
       const timeout = setTimeout(() => {
         setShow(true);

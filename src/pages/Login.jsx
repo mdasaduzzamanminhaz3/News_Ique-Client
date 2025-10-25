@@ -17,8 +17,13 @@ const Login = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await loginUser(data);
-      navigate("/dashboard");
+      const loggedUser = await loginUser(data);
+      console.log("Looged in user:",loggedUser);
+      if (loggedUser?.role ==='ADMIN' || loggedUser?.role==='EDITOR'){
+        navigate("/dashboard");
+      }else{
+        navigate('/')
+      }
     } catch (error) {
       console.log("Login Failed", error);
     } finally {
