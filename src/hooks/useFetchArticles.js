@@ -27,7 +27,7 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
 
         setFeatured(res.data.results?.featured || null);
         setArticles(res.data.results?.articles || res.data?.results);
-        console.log(res.data.count);
+        // console.log(res.data.count);
         setTotalPages(Math.ceil(res.data.count / pageSize));
       } catch (error) {
         console.error("API Error:", error.message);

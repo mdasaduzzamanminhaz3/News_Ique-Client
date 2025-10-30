@@ -13,7 +13,7 @@ const Sidebar = () => {
   const menuItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
     { to: "/articles", icon: FiPackage, label: "Articles" },
-    { to: "/products/add", icon: FiPlusCircle, label: "Create Article" },
+    { to: "/articles/add", icon: FiPlusCircle, label: "Create Article" },
     { to: "/categories", icon: FiTag, label: "Categories" },
     { to: "/categories/add", icon: FiPlusCircle, label: "Add Category" },
     { to: "/reviews", icon: FiStar, label: "Reviews" },

@@ -12,6 +12,7 @@ import ActivateAccount from "../components/Registration/ActivateAccount";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Profile from "../pages/Profile";
 import ArticleList from "../components/Article/ArticleList";
+import AddArticle from "../pages/AddArticle";
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="profile" element={<Profile/>}/>
         <Route path="articles" element={<ArticleList/>}/>
+        <Route path="articles/add" element={<AddArticle/>}/>
       </Route>
     </Routes>
   );
