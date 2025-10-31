@@ -13,6 +13,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import Profile from "../pages/Profile";
 import ArticleList from "../components/Article/ArticleList";
 import AddArticle from "../pages/AddArticle";
+import UpdateArticle from "../components/Article/UpdateArticle";
 
 const AppRoutes = () => {
   return (
@@ -22,7 +23,6 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="/article/:id" element={<ArticleDetail />} />
-        <Route path="/article-page" element={<ArticlePage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
@@ -39,7 +39,9 @@ const AppRoutes = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="profile" element={<Profile/>}/>
         <Route path="articles" element={<ArticleList/>}/>
+        <Route path="/article-page" element={<ArticlePage />} />
         <Route path="articles/add" element={<AddArticle/>}/>
+        <Route path="articles/edit/:id" element={<UpdateArticle/>}/>
       </Route>
     </Routes>
   );

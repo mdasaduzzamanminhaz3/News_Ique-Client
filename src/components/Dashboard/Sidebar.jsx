@@ -12,7 +12,7 @@ import { Link } from "react-router";
 const Sidebar = () => {
   const menuItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
-    { to: "/articles", icon: FiPackage, label: "Articles" },
+    { to: "/article-page", icon: FiPackage, label: "Articles" },
     { to: "/articles/add", icon: FiPlusCircle, label: "Create Article" },
     { to: "/categories", icon: FiTag, label: "Categories" },
     { to: "/categories/add", icon: FiPlusCircle, label: "Add Category" },
