@@ -9,7 +9,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const categories = useFetchCategories();
+  const {categories} = useFetchCategories();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleCategoryChange = (e) => {

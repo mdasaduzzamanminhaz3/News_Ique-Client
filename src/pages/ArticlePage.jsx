@@ -89,13 +89,13 @@ const handlePageChange = (newPage) => {
                   </span>
                 </div>
 
-                <div className="flex justify-between ">
+                <div className="flex justify-between mt-2">
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       navigate(`/articles/edit/${article.id}`);
                     }}
-                    className="btn bg-blue-50 text-blue-700 hover:bg-blue-300"
+                    className="btn bg-white outline outline-blue-500 text-blue-800 hover:bg-blue-300"
                   >
                     Update
                   </button>
@@ -104,7 +104,7 @@ const handlePageChange = (newPage) => {
                       e.preventDefault();
                       handleDelete(article.id);
                     }}
-                    className="btn text-red-700 bg-red-50 hover:bg-red-300"
+                    className="btn outline outline-red-500 text-red-800 bg-white hover:bg-red-300"
                   >
                     Delete
                   </button>
