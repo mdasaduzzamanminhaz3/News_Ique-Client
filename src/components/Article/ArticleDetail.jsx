@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import apiClient from "../../services/api-client";
 import ErrorAlert from "../ErrorAlert";
 import { formatPublishedDate } from "../utils/formatDate";
+import ReviewSection from "../Review/ReviewSection";
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -56,6 +57,7 @@ const ArticleDetail = () => {
               {formatPublishedDate(article.published_at)}
             </span>
           </div>
+          <ReviewSection/>
         </div>
       )}
     </div>
