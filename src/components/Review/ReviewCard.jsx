@@ -21,8 +21,9 @@ const ReviewCard = ({
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
           <div>
             <p className="font-semibold">
-              {review.user ? review.user.first_name : "Anonymous"}
-            </p>
+{review.user
+    ? `${review.user.first_name || ""} ${review.user.last_name || ""}`.trim() || "Anonymous"
+    : "Anonymous"}            </p>
             <div className="flex items-center gap-2">
               <div className="flex text-yellow-400">
                 {[...Array(5)].map((_, i) => (

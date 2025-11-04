@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import useAuthContext from "../hooks/useAuthContext";
 import ErrorAlert from "../components/ErrorAlert";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Login = () => {
@@ -19,9 +19,10 @@ const Login = () => {
     try {
       const loggedUser = await loginUser(data);
       console.log("Looged in user:",loggedUser);
+      if (!loggedUser) return;
       if (loggedUser?.role ==='ADMIN' || loggedUser?.role==='EDITOR'){
         navigate("/dashboard");
-      }else{
+      }else {
         navigate('/')
       }
     } catch (error) {
