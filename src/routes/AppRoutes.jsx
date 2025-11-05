@@ -16,6 +16,7 @@ import AddArticle from "../pages/AddArticle";
 import UpdateArticle from "../components/Article/UpdateArticle";
 import CategoryPage from "../pages/CategoryPage";
 import CategoryForm from "../components/Categories/CategoryForm";
+import Reviews from "../pages/Reviews";
 
 const AppRoutes = () => {
   return (
@@ -28,24 +29,33 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
+        <Route
+          path="profile"
+          element={
+            <PrivetRoutes>
+              <Profile />
+            </PrivetRoutes>
+          }
+        />
       </Route>
-      {/* privet routes */}
 
+      {/* Dashboard Routes */}
       <Route
+        path="dashboard"
         element={
           <PrivetRoutes>
             <DashboardLayout />
           </PrivetRoutes>
         }
       >
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="profile" element={<Profile/>}/>
-        <Route path="articles" element={<ArticleList/>}/>
-        <Route path="/article-page" element={<ArticlePage />} />
-        <Route path="articles/add" element={<AddArticle/>}/>
-        <Route path="articles/edit/:id" element={<UpdateArticle/>}/>
-        <Route path="categories" element={<CategoryPage />}/>
-        <Route path="categories/add" element={<CategoryForm />}/>
+        <Route index element={<Dashboard />} />
+        <Route path="articles" element={<ArticleList />} />
+        <Route path="article-page" element={<ArticlePage />} />
+        <Route path="articles/add" element={<AddArticle />} />
+        <Route path="articles/edit/:id" element={<UpdateArticle />} />
+        <Route path="categories" element={<CategoryPage />} />
+        <Route path="categories/add" element={<CategoryForm />} />
+        <Route path="reviews" element={<Reviews />} />
       </Route>
     </Routes>
   );

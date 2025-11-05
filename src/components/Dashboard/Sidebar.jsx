@@ -12,12 +12,12 @@ import { Link } from "react-router";
 const Sidebar = () => {
   const menuItems = [
     { to: "/dashboard", icon: FiBarChart2, label: "Dashboard" },
-    { to: "/article-page", icon: FiPackage, label: "Articles" },
-    { to: "/articles/add", icon: FiPlusCircle, label: "Create Article" },
-    { to: "/categories", icon: FiTag, label: "Categories" },
-    { to: "/categories/add", icon: FiPlusCircle, label: "Add Category" },
-    { to: "/reviews", icon: FiStar, label: "Reviews" },
-    { to: "/users", icon: FiUsers, label: "Users" },
+    { to: "/dashboard/article-page", icon: FiPackage, label: "Articles" },
+    { to: "/dashboard/articles/add", icon: FiPlusCircle, label: "Create Article" },
+    { to: "/dashboard/categories", icon: FiTag, label: "Categories" },
+    { to: "/dashboard/categories/add", icon: FiPlusCircle, label: "Add Category" },
+    { to: "/dashboard/reviews", icon: FiStar, label: "Reviews" },
+    { to: "/dashboard/users", icon: FiUsers, label: "Users" },
   ];
   return (
     <div className="drawer-side z-10">
