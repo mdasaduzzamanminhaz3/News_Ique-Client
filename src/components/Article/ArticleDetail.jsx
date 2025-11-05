@@ -27,11 +27,11 @@ const ArticleDetail = () => {
 
   return (
     <div className="px-4">
-      {loading && !error && (
-        <div className="text-center py-10 text-gray-500 font-semibold animate-pulse">
-          Loading article...
-        </div>
-      )}
+{loading && !error && (
+  <div className="col-span-full flex justify-center items-center py-6">
+    <span className="loading loading-spinner text-primary loading-xl"></span>
+  </div>
+)}
 
       {!loading && error && (
         <p className="text-center text-red-500 mt-6">

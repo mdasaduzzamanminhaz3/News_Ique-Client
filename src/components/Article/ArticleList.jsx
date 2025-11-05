@@ -24,12 +24,12 @@ const ArticleList = ({ articles, error }) => {
     <div className="bg-gray-50">
       {error && <ErrorAlert error={error} />}
 
-      <div className="grid gap-2 py-2 grid-cols-1 lg:grid-cols-3 md:grid-cols-2 h-full w-full">
-        {loading && !error && (
-          <div className="text-center py-10 text-gray-500 font-semibold animate-pulse">
-            Loading articles...
-          </div>
-        )}
+      <div className="text-center grid gap-2 py-2 grid-cols-1 lg:grid-cols-3 md:grid-cols-2 h-full w-full">
+{loading && !error && (
+  <div className="col-span-full flex justify-center items-center py-6">
+    <span className="loading loading-spinner text-primary loading-xl"></span>
+  </div>
+)}
 
         {!loading &&
           !error &&
