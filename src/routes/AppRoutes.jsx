@@ -17,6 +17,7 @@ import UpdateArticle from "../components/Article/UpdateArticle";
 import CategoryPage from "../pages/CategoryPage";
 import CategoryForm from "../components/Categories/CategoryForm";
 import Reviews from "../pages/Reviews";
+import TrendingPage from "../pages/TrendingPage";
 
 const AppRoutes = () => {
   return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />
+        <Route path="trending" element={<TrendingPage />} />
         <Route path="/article/:id" element={<ArticleDetail />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

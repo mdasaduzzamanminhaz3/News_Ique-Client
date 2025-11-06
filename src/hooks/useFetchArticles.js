@@ -6,10 +6,12 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
   const [featured, setFeatured] = useState(null);
   const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
   useEffect(() => {
     const fetchArticles = async () => {
+      setLoading(true);
       try {
         let url = "";
 
@@ -32,17 +34,32 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
       } catch (error) {
         console.error("API Error:", error.message);
         setError(error.message);
+      }finally{
+        setLoading(false);
       }
     };
 
     fetchArticles();
   }, [currentPage, selectedCategory,searchQuery]);
 
+  const trendingArticles = articles.filter((article) => {
+    if (!article.published_at) return false;
+    const pubDate = new Date(article.published_at);
+    const today = new Date();
+    const diffInDays = (today - pubDate) / (1000 * 60 * 60 * 24);
+    console.log(diffInDays);
+    return diffInDays <= 15;
+  });
+
+
   return {
     articles,
     featured,
     error,
     totalPages,
+    loading,
+    trendingArticles,
+
   };
 };
 
