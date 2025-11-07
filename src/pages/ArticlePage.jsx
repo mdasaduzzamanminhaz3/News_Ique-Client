@@ -93,7 +93,7 @@ const handlePageChange = (newPage) => {
                   <button
                     onClick={(e) => {
                       e.preventDefault();
-                      navigate(`/articles/edit/${article.id}`);
+                      navigate(`/dashboard/articles/edit/${article.id}`);
                     }}
                     className="btn bg-white outline outline-blue-500 text-blue-800 hover:bg-blue-300"
                   >

@@ -8,7 +8,6 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
-
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
@@ -29,7 +28,11 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
 
         setFeatured(res.data.results?.featured || null);
         setArticles(res.data.results?.articles || res.data?.results);
+        // console.log("fetch articles",res.data.results);
         // console.log(res.data.count);
+
+
+
         setTotalPages(Math.ceil(res.data.count / pageSize));
       } catch (error) {
         console.error("API Error:", error.message);
@@ -47,7 +50,7 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
     const pubDate = new Date(article.published_at);
     const today = new Date();
     const diffInDays = (today - pubDate) / (1000 * 60 * 60 * 24);
-    console.log(diffInDays);
+    // console.log(diffInDays);
     return diffInDays <= 15;
   });
 

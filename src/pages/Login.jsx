@@ -19,7 +19,7 @@ const Login = () => {
     try {
       const loggedUser = await loginUser(data);
       console.log("Looged in user:",loggedUser);
-      if (!loggedUser) return;
+      // if (!loggedUser) return;
       if (loggedUser?.role ==='ADMIN' || loggedUser?.role==='EDITOR'){
         navigate("/dashboard");
       }else {
