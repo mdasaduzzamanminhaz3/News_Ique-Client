@@ -6,7 +6,7 @@ const HeroSection = ({featured}) => {
         <div>
             <div className="p-2 mx-auto"> 
             <h1 className="font-bold text-red-500 text-3xl p-2 ">সর্বশেষ নিউজ</h1>
-            <div className="p-3 rounded bg-white shadow-sm mx-2 my-2">
+            <div className="p-3 rounded bg-gradient-to-br to-purple-50 from-blue-50 shadow-sm mx-2 my-2">
             <h3 className="block font-semibold">
              {featured?.headline || "Loading..."}
               </h3>

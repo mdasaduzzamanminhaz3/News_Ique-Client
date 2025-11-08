@@ -17,7 +17,7 @@ const Home = () => {
 
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gradient-to-br to-purple-50 from-blue-50">
       <BreakingNewsTicker headlines={headlines} />
       <HeroSection featured={featured} />
       <ArticleList articles={articles} error={error} />

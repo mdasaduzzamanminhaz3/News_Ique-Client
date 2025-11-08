@@ -1,6 +1,6 @@
 const StatCard = ({ icon: Icon, title, value }) => {
   return (
-    <div className="card bg-gray-50 shadow-md hover:bg-gray-100 hover:shadow-lg transition-colors duration-300">
+    <div className="card bg-gradient-to-tr to-blue-100 from-purple-100 shadow-md hover:bg-gray-100 hover:shadow-lg transition-colors duration-300">
       <div className="card-body p-4">
         <div className="flex items-center gap-2">
           <Icon className="h-5 w-5 text-primary" />

@@ -38,7 +38,7 @@ const ArticleList = ({ articles, error }) => {
             <Link key={article.id} to={`/article/${article.id}`}>
               <div
                 key={index}
-                className={`shadow-sm bg-white rounded my-2 mx-3 p-2 transform transition-all duration-700 ease-out
+                className={`shadow-sm hover:shadow-2xl bg-gradient-to-br to-purple-100 from-blue-100 hover:to-purple-200 hover:from-blue-200 rounded my-2 mx-3 p-2 transform transition-all duration-700 ease-out
               ${
                 show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
               }`}

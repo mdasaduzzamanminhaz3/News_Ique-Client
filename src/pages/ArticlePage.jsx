@@ -47,7 +47,7 @@ const handlePageChange = (newPage) => {
   };
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gradient-to-tr to-blue-50 from-pink-50">
       <div className="grid gap-2 py-2 grid-cols-1 lg:grid-cols-3 md:grid-cols-2 h-full w-full">
         {loading && (
           <div className="text-center py-10 text-gray-500 font-semibold animate-pulse">
@@ -61,7 +61,7 @@ const handlePageChange = (newPage) => {
             <Link key={article.id} to={`/article/${article.id}`}>
               <div
                 key={index}
-                className={`shadow-sm bg-white rounded my-2 mx-3 p-2 transform transition-all duration-700 ease-out
+                className={`shadow-sm hover:shadow-2xl bg-gradient-to-br to-purple-50 hover:to-purple-100 from-blue-50 hover:from-blue-100  rounded my-2 mx-3 p-2 
               ${
                 show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
               }`}

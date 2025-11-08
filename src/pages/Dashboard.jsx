@@ -96,7 +96,7 @@ export default function Dashboard() {
           <span className="loading loading-spinner text-primary loading-xl"></span>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 ">
           <StatCard
             icon={MdArticle}
             title="Total Articles"
