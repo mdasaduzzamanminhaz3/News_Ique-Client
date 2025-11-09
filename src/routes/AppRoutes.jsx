@@ -18,6 +18,8 @@ import CategoryPage from "../pages/CategoryPage";
 import CategoryForm from "../components/Categories/CategoryForm";
 import Reviews from "../pages/Reviews";
 import TrendingPage from "../pages/TrendingPage";
+import UserPage from "../pages/UserPage";
+import UserForm from "../components/Users/UserForm";
 
 const AppRoutes = () => {
   return (
@@ -58,6 +60,8 @@ const AppRoutes = () => {
         <Route path="categories" element={<CategoryPage />} />
         <Route path="categories/add" element={<CategoryForm />} />
         <Route path="reviews" element={<Reviews />} />
+        <Route path="users" element={<UserPage />} />
+        <Route path="users/edit/:id"  element={<UserForm/>}/>
       </Route>
     </Routes>
   );
