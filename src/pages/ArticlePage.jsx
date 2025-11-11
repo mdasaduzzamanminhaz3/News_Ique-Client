@@ -11,12 +11,13 @@ const ArticlesPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
       try {
         await authApiClient
-          .get(`/api/v1/articles/?page=${page}`)
+          .get(`/api/v1/articles/?page=${page}&search=${search}`)
           .then((res) => {
             setArticles(res.data?.results || res.data);
             setTotalPages(Math.ceil(res.data.count / 10));
@@ -30,7 +31,7 @@ const ArticlesPage = () => {
       }
     };
     fetchArticles();
-  }, [page]);
+  }, [page,search]);
   
 const handlePageChange = (newPage) => {
   setPage(newPage);
@@ -48,6 +49,14 @@ const handlePageChange = (newPage) => {
 
   return (
     <div className="bg-gradient-to-tr to-blue-50 from-pink-50">
+      
+      {/* search bar */}
+      <div className="flex justify-center items-center gap-2 py-4">
+    <input type="text" value={search} onChange={(e)=> setSearch(e.target.value)} placeholder="Search articles" className="input input-bordered w-full max-w-md"/>
+    <button className="btn bg-blue-600 text-gray-200">Search</button>
+      </div>
+
+
       <div className="grid gap-2 py-2 grid-cols-1 lg:grid-cols-3 md:grid-cols-2 h-full w-full">
         {loading && (
           <div className="text-center py-10 text-gray-500 font-semibold animate-pulse">
