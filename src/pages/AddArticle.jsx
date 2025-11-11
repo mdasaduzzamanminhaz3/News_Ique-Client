@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import authApiClient from "../services/auth-api-client";
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
+import ErrorAlert from "../components/ErrorAlert";
 
 const AddArticle = () => {
   const {
@@ -13,7 +14,7 @@ const AddArticle = () => {
   const [categories, setCategories] = useState([]);
   const [loading,setLoading]= useState(false);
   const [successMsg,setSuccessMsg] = useState("");
-
+  const [error, setError] = useState("");
   //fetching category
   useEffect(() => {
     apiClient.get("/api/v1/categories/").then((res) => {
@@ -56,6 +57,7 @@ const AddArticle = () => {
 
     }catch(error){
       console.log("Error creating article:",error.response?.data || error);
+      setError(error.response.data.details);
     }finally{
       setLoading(false);
     }
@@ -82,6 +84,11 @@ const AddArticle = () => {
               <span>{successMsg}</span>
             </div>
           )}
+
+        
+        {error && (
+          <ErrorAlert error={error}/>
+        )}
 
       <h2 className="text-2xl font-semibold mb-4">Create A New Article</h2>
 
