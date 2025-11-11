@@ -47,7 +47,7 @@ const AppRoutes = () => {
       <Route
         path="dashboard"
         element={
-          <PrivetRoutes>
+          <PrivetRoutes allowRoles={["ADMIN","EDITOR"]}>
             <DashboardLayout />
           </PrivetRoutes>
         }

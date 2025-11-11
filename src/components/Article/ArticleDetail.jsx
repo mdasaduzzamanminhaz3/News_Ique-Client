@@ -26,7 +26,7 @@ const ArticleDetail = () => {
   }, [id]);
 
   return (
-    <div className="px-4">
+    <div className="px-4 bg-gray-100">
 {loading && !error && (
   <div className="col-span-full flex justify-center items-center py-6">
     <span className="loading loading-spinner text-primary loading-xl"></span>
@@ -40,7 +40,7 @@ const ArticleDetail = () => {
       )}
 
       {!loading && article && (
-        <div className="max-w-screen-md mx-auto w-full h-auto p-4 my-6 rounded shadow-sm bg-white">
+        <div className="max-w-screen-md mx-auto w-full h-auto p-4 my-6 rounded-md shadow-md bg-white">
           <div className="space-y-4">
             <h3 className="font-bold text-2xl md:text-3xl">{article.headline}</h3>
             <img

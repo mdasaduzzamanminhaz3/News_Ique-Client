@@ -44,6 +44,11 @@ const Navbar = ({ sidebarOpen }) => {
               </Link>
             </li>
             <li>
+              <Link to="/dashboard" className="justify-between">
+                Dashboard
+              </Link>
+            </li>
+            <li>
               <a onClick={logoutUser}>Logout</a>
             </li>
           </ul>

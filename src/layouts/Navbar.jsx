@@ -6,22 +6,29 @@ import useAuthContext from "../hooks/useAuthContext";
 
 const Navbar = ({ onSelectCategory, onSearch }) => {
   const { user, logoutUser } = useAuthContext();
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const {categories} = useFetchCategories();
   const [searchQuery, setSearchQuery] = useState("");
+  const { categories } = useFetchCategories();
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setSelectedCategory(value);
     onSelectCategory?.(value);
+    setMenuOpen(false);
   };
 
   const handleSearch = () => {
-    if (onSearch) {
-      onSearch(searchQuery);
-    }
+    onSearch?.(searchQuery);
+    setMenuOpen(false);
+  };
+
+  const handleReset = () => {
+    setSelectedCategory("");
+    setSearchQuery("");
+    onSelectCategory?.("");
+    onSearch?.("");
+    setMenuOpen(false);
   };
 
   return (
@@ -29,15 +36,11 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link
-            to="/"
-            className="text-3xl font-bold text-blue-600 dark:text-blue-400 font-serif"
-          >
-            
+          <Link to="/" className="text-3xl font-bold text-blue-600 dark:text-blue-400 font-serif">
             NEWS<span className="text-gray-800 dark:text-gray-100">IQUE</span>
           </Link>
 
-          {/* Search bar */}
+          {/* Desktop Search */}
           <div className="hidden md:flex items-center flex-grow max-w-md mx-4">
             <input
               type="text"
@@ -48,7 +51,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
             />
             <button
               onClick={handleSearch}
-              className="bg-blue-600 text-white px-3 py-2.5 rounded-r-md hover:bg-blue-700 cursor-pointer"
+              className="bg-blue-600 text-white px-3 py-2.5 rounded-r-md hover:bg-blue-700"
             >
               <Search size={18} />
             </button>
@@ -56,24 +59,14 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4 text-sm text-gray-700 dark:text-gray-200">
-            <Link
-              to="/"
-              onClick={() => {
-                setSelectedCategory("");
-                onSelectCategory?.("");
-                setSearchQuery("");
-                if (onSearch) onSearch("");
-              }}
-              className="hover:text-blue-600 dark:hover:text-blue-400"
-            >
+            <Link to="/" onClick={handleReset} className="hover:text-blue-600 dark:hover:text-blue-400">
               Home
             </Link>
 
-            {/* Category Dropdown */}
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-md  py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-md py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="">Categories</option>
               {categories.map((category) => (
@@ -83,82 +76,45 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               ))}
             </select>
 
-            <Link
-              to="/trending"
-              className="hover:text-blue-600 dark:hover:text-blue-400"
-            >
+            <Link to="/trending" className="hover:text-blue-600 dark:hover:text-blue-400">
               Trending
             </Link>
-            <Link
-              to="/about"
-              className="hover:text-blue-600 dark:hover:text-blue-400"
-            >
+            <Link to="/about" className="hover:text-blue-600 dark:hover:text-blue-400">
               About
             </Link>
 
-            {/* Profile Dropdown */}
-            <div>
-              {user ? (
-                <div className="flex-none">
-                  <div className="dropdown dropdown-end">
-                    <label
-                      tabIndex={0}
-                      className="btn btn-ghost btn-circle avatar"
-                    >
-                      <div className="w-10 rounded-full">
-                        <img
-                          alt="User avatar"
-                          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                        />
-                      </div>
-                    </label>
-                    <ul
-                      tabIndex={0}
-                      className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-                    >
-                      <li>
-                        <Link to="/" className="justify-between">
-                          Home
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/dashboard" className="justify-between">
-                          Dashboard
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/profile" className="justify-between">
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/settings">Settings</Link>
-                      </li>
-                      <li>
-                        <a onClick={logoutUser}>Logout</a>
-                      </li>
-                    </ul>
+            {/* Profile */}
+            {user ? (
+              <div className="dropdown dropdown-end">
+                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="User avatar"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
                   </div>
-                </div>
-              ) : (
-                <div className="flex gap-3">
-                  <Link to="/login" className="btn bg-blue-600 text-white">
-                    Login
-                  </Link>
-                  <Link to="/register" className="btn bg-blue-600 text-white">
-                    Register
-                  </Link>
-                </div>
-              )}
-            </div>
+                </label>
+                <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><Link to="/">Home</Link></li>
+                  {user && ["ADMIN","EDITOR"].includes(user.role) && ( 
+                  <li><Link to="/dashboard">Dashboard</Link></li>
+                  )}
+                  <li><Link to="/profile">Profile</Link></li>
+                  <li><Link to="/profile">Subscription</Link></li>
+                  <li><a onClick={logoutUser}>Logout</a></li>
+                </ul>
+              </div>
+            ) : (
+              <div className="flex gap-3">
+                <Link to="/login" className="btn bg-blue-600 text-white">Login</Link>
+                <Link to="/register" className="btn bg-blue-600 text-white">Register</Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-700 dark:text-gray-200 focus:outline-none"
-            >
+            <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-700 dark:text-gray-200">
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
@@ -167,28 +123,22 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 shadow-md">
-          <div className="px-4 pt-2 pb-3 space-y-2 text-gray-700 dark:text-gray-200">
-            {["Home", "Trending", "Contact"].map((item) => (
+        <div className="md:hidden bg-white dark:bg-gray-900 shadow-md transition-all duration-300">
+          <div className="px-4 pt-2 pb-4 space-y-3 text-gray-700 dark:text-gray-200">
+            {["Home", "Trending", "About"].map((item) => (
               <Link
                 key={item}
                 to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
                 className="block hover:text-blue-600 dark:hover:text-blue-400"
                 onClick={() => {
-                  if (item === "Home") {
-                    setSelectedCategory("");
-                    onSelectCategory?.("");
-                    setSearchQuery("");
-                    if (onSearch) onSearch("");
-                  }
-                  setMenuOpen(false); // Mobile menu close
+                  if (item === "Home") handleReset();
+                  else setMenuOpen(false);
                 }}
               >
                 {item}
               </Link>
             ))}
 
-            {/* Category Dropdown */}
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
@@ -202,8 +152,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               ))}
             </select>
 
-            {/* Mobile Search */}
-            <div className="flex items-center mt-3">
+            <div className="flex items-center">
               <input
                 type="text"
                 placeholder="Search..."
@@ -219,34 +168,23 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               </button>
             </div>
 
-            {/* Profile */}
-            <div>
-              {user ? (
-                <div className="flex items-center justify-between mt-3 border-t dark:border-gray-700 pt-2">
-                  <span>User</span>
-                  <label
-                    tabIndex={0}
-                    className="btn btn-ghost btn-circle avatar"
-                  >
-                    <div className="w-10 rounded-full">
-                      <img
-                        alt="User avatar"
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      />
-                    </div>
-                  </label>
-                </div>
-              ) : (
-                <div className="flex gap-7">
-                  <Link className="btn bg-blue-600 text-white" to="/login">
-                    Login
-                  </Link>
-                  <Link className="btn bg-blue-600 text-white" to="/register">
-                    Register
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Mobile Profile */}
+            {user ? (
+              <ul className="menu mt-3 p-2 shadow bg-base-100 rounded-box w-full border-t dark:border-gray-700 pt-2">
+                <li><Link to="/">Home</Link></li>
+                {["ADMIN","EDITOR"].includes(user.role) && ( 
+                <li><Link to="/dashboard">Dashboard</Link></li>
+                )}
+                <li><Link to="/profile">Profile</Link></li>
+                <li><a>Subscription</a></li>
+                <li><a onClick={logoutUser}>Logout</a></li>
+              </ul>
+            ) : (
+              <div className="flex gap-4 pt-2 border-t dark:border-gray-700">
+                <Link to="/login" className="btn bg-blue-600 text-white w-full">Login</Link>
+                <Link to="/register" className="btn bg-blue-600 text-white w-full">Register</Link>
+              </div>
+            )}
           </div>
         </div>
       )}
