@@ -1,9 +1,9 @@
 import useAuthContext from "../hooks/useAuthContext";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 const PrivetRoutes = ({ children,allowRoles }) => {
-  const { user } = useAuthContext();
-  if (user === null) return <p>Loading...</p>;
+  const { user,loading } = useAuthContext();
+  if (loading) return <p>Loading...</p>;
   if (!user) return <Navigate to="/login" />;
 
   if (allowRoles && !allowRoles.includes(user.role)) return <Navigate to="/" />;

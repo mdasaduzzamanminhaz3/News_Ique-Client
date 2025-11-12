@@ -5,13 +5,18 @@ import authApiClient from "../services/auth-api-client";
 const useAuth = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const getToken = () => {
     const token = localStorage.getItem("authTokens");
     return token ? JSON.parse(token) : null;
   };
   const [authTokens, setAuthTokens] = useState(getToken());
   useEffect(() => {
-    if (authTokens) fetchUserProfile();
+    if (authTokens) {
+      fetchUserProfile().finally(() => setLoading(false));
+    }else{
+      setLoading(false);
+    }
   }, [authTokens]);
 
   const handleAPIError = (
@@ -48,13 +53,13 @@ const useAuth = () => {
   const updateUserProfile = async (data) => {
     setError("");
     try {
-     await apiClient.patch("/auth/users/me/", data, {
+      await apiClient.patch("/auth/users/me/", data, {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },
       });
     } catch (error) {
-      return handleAPIError(error)
+      return handleAPIError(error);
     }
   };
 
@@ -62,7 +67,7 @@ const useAuth = () => {
   const changePassword = async (data) => {
     setError("");
     try {
-      await authApiClient.post("/auth/users/set_password/",data);
+      await authApiClient.post("/auth/users/set_password/", data);
     } catch (error) {
       return handleAPIError(error);
     }
@@ -77,7 +82,6 @@ const useAuth = () => {
 
       // after login set user
       await fetchUserProfile();
-
     } catch (error) {
       setError(error.response.data?.detail);
     }
@@ -103,6 +107,7 @@ const useAuth = () => {
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
+    setLoading(false);
     localStorage.removeItem("authTokens");
   };
 
@@ -114,6 +119,7 @@ const useAuth = () => {
     updateUserProfile,
     changePassword,
     error,
+    loading
   };
 };
 export default useAuth;
