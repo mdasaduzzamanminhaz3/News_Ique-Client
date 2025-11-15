@@ -1,8 +1,9 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import ErrorAlert from "../ErrorAlert";
 import { formatPublishedDate } from "../utils/formatDate";
 import ReviewSection from "../Review/ReviewSection";
 import useFetchArticleDetail from "../../hooks/useFetchArticleDetail";
+import { IoIosArrowBack } from "react-icons/io";
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -25,6 +26,9 @@ const ArticleDetail = () => {
       {!loading && !error && article && (
         <div className="max-w-screen-md mx-auto w-full h-auto p-4 my-6 rounded-md shadow-md bg-white">
           <div className="space-y-4">
+            <div className="flex items-center font-bold text-xl text-blue-600">
+            <Link className="text-center flex items-center" to='/'><IoIosArrowBack />back</Link>
+            </div>
             <h3 className="font-bold text-2xl md:text-3xl">{article.headline}</h3>
             <img
               src={article.image || "/src/assets/images/Image-not-found.png"}
