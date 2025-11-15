@@ -31,6 +31,8 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     setMenuOpen(false);
   };
 
+
+
   return (
     <nav className="bg-gradient-to-br to-purple-50 from-blue-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,7 +102,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                   <li><Link to="/dashboard">Dashboard</Link></li>
                   )}
                   <li><Link to="/profile">Profile</Link></li>
-                  <li><Link to="/profile">Subscription</Link></li>
+                <li><Link to="/subscription/plan">Subscription</Link></li>
                   <li><a onClick={logoutUser}>Logout</a></li>
                 </ul>
               </div>
@@ -176,7 +178,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                 <li><Link to="/dashboard">Dashboard</Link></li>
                 )}
                 <li><Link to="/profile">Profile</Link></li>
-                <li><a>Subscription</a></li>
+                <li><Link to="/subscription/plan">Subscription</Link></li>
                 <li><a onClick={logoutUser}>Logout</a></li>
               </ul>
             ) : (

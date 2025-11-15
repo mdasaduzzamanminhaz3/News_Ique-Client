@@ -20,6 +20,8 @@ import Reviews from "../pages/Reviews";
 import TrendingPage from "../pages/TrendingPage";
 import UserPage from "../pages/UserPage";
 import UserForm from "../components/Users/UserForm";
+import SubscriptionPage from "../pages/SubscriptionPage";
+import PaymentSuccess from "../components/Subscription/PaymentSuccess";
 
 const AppRoutes = () => {
   return (
@@ -33,6 +35,10 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
+<Route path="/payment/success" element={<PaymentSuccess />} />
+
+        <Route path="/subscription/plan" element={<PrivetRoutes> <SubscriptionPage/> </PrivetRoutes>} />
+
         <Route
           path="profile"
           element={
