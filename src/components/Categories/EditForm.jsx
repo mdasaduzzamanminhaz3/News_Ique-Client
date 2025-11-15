@@ -3,13 +3,14 @@ import  { useState } from 'react';
 const EditForm = ({ category, onSave, onCancel }) => {
     const [name, setName] = useState(category.name);
     const [description, setDescription] = useState(category.description);
-
+    const [isPremium,setIsPremium] =useState(category.is_premium || false);
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave({ 
             ...category, 
             name: name, 
-            description: description 
+            description: description,
+            is_premium:isPremium
         });
     };
 
@@ -36,7 +37,18 @@ const EditForm = ({ category, onSave, onCancel }) => {
                         required
                     ></textarea>
                 </div>
-                
+                <div className="mb-4 flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        checked={isPremium}
+                        onChange={(e) => setIsPremium(e.target.checked)}
+                        id="isPremium"
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="isPremium" className="text-gray-700 text-sm font-medium">
+                        Premium
+                    </label>
+                </div>
                 <div className="flex justify-between gap-2">
                     <button
                         type="submit"

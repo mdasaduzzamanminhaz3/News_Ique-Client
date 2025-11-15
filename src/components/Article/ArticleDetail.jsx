@@ -1,37 +1,20 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import apiClient from "../../services/api-client";
 import ErrorAlert from "../ErrorAlert";
 import { formatPublishedDate } from "../utils/formatDate";
 import ReviewSection from "../Review/ReviewSection";
+import useFetchArticleDetail from "../../hooks/useFetchArticleDetail";
 
 const ArticleDetail = () => {
   const { id } = useParams();
-  const [article, setArticle] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    apiClient
-      .get(`/api/v1/public_articles/${id}`)
-      .then((res) => {
-        setArticle(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [id]);
+  const { article, error, loading } = useFetchArticleDetail(id);
 
   return (
     <div className="px-4 bg-gray-100">
-{loading && !error && (
-  <div className="col-span-full flex justify-center items-center py-6">
-    <span className="loading loading-spinner text-primary loading-xl"></span>
-  </div>
-)}
+      {loading && !error && (
+        <div className="col-span-full flex justify-center items-center py-6">
+          <span className="loading loading-spinner text-primary loading-xl"></span>
+        </div>
+      )}
 
       {!loading && error && (
         <p className="text-center text-red-500 mt-6">
@@ -39,7 +22,7 @@ const ArticleDetail = () => {
         </p>
       )}
 
-      {!loading && article && (
+      {!loading && !error && article && (
         <div className="max-w-screen-md mx-auto w-full h-auto p-4 my-6 rounded-md shadow-md bg-white">
           <div className="space-y-4">
             <h3 className="font-bold text-2xl md:text-3xl">{article.headline}</h3>
@@ -57,7 +40,7 @@ const ArticleDetail = () => {
               {formatPublishedDate(article.published_at)}
             </span>
           </div>
-          <ReviewSection/>
+          <ReviewSection />
         </div>
       )}
     </div>

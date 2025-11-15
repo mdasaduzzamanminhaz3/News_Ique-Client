@@ -35,9 +35,20 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
-<Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/success" element={
+          <PrivetRoutes>
+            <PaymentSuccess />
+          </PrivetRoutes>
+          } />
 
-        <Route path="/subscription/plan" element={<PrivetRoutes> <SubscriptionPage/> </PrivetRoutes>} />
+        <Route
+          path="/subscription/plan"
+          element={
+            <PrivetRoutes>
+              <SubscriptionPage />
+            </PrivetRoutes>
+          }
+        />
 
         <Route
           path="profile"
@@ -53,7 +64,7 @@ const AppRoutes = () => {
       <Route
         path="dashboard"
         element={
-          <PrivetRoutes allowRoles={["ADMIN","EDITOR"]}>
+          <PrivetRoutes allowRoles={["ADMIN", "EDITOR"]}>
             <DashboardLayout />
           </PrivetRoutes>
         }
@@ -67,7 +78,7 @@ const AppRoutes = () => {
         <Route path="categories/add" element={<CategoryForm />} />
         <Route path="reviews" element={<Reviews />} />
         <Route path="users" element={<UserPage />} />
-        <Route path="users/edit/:id"  element={<UserForm/>}/>
+        <Route path="users/edit/:id" element={<UserForm />} />
       </Route>
     </Routes>
   );

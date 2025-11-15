@@ -1,59 +1,67 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
+import authApiClient from "../services/auth-api-client"; // JWT attach করা client
+import useAuth from "./useAuth";
 
-const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
+const useFetchArticles = ({ currentPage, selectedCategory, searchQuery }) => {
   const [articles, setArticles] = useState([]);
   const [featured, setFeatured] = useState(null);
   const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
   const pageSize = 10;
+
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
       try {
         let url = "";
+        let client = apiClient; // default public client
 
         if (selectedCategory && selectedCategory !== 1) {
           url = `/api/v1/articles/?page=${currentPage}&category_id=${selectedCategory}`;
+          client = authApiClient; // category fetch always needs auth
         } else {
-          url = `/api/v1/public_articles/homepage/?page=${currentPage}`;
+          if (
+            user?.subscription?.is_active &&
+            user?.subscription?.plan?.name === "Premium"
+          ) {
+            url = `/api/v1/articles/?page=${currentPage}`;
+            client = authApiClient; // Premium user uses JWT
+          } else {
+            url = `/api/v1/public_articles/homepage/?page=${currentPage}`;
+          }
         }
 
-        // console.log("Fetching:", url);
         if (searchQuery && searchQuery.trim() !== "") {
           url = `/api/v1/articles/?search=${searchQuery}&page=${currentPage}`;
+          client = authApiClient; // search always private
         }
-        const res = await apiClient.get(url);
+
+        const res = await client.get(url);
 
         setFeatured(res.data.results?.featured || null);
         setArticles(res.data.results?.articles || res.data?.results);
-        // console.log("fetch articles",res.data.results);
-        // console.log(res.data.count);
-
-
-
         setTotalPages(Math.ceil(res.data.count / pageSize));
-      } catch (error) {
-        console.error("API Error:", error.message);
-        setError(error.message);
-      }finally{
+      } catch (err) {
+        console.error("API Error:", err.message);
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchArticles();
-  }, [currentPage, selectedCategory,searchQuery]);
+  }, [currentPage, selectedCategory, searchQuery, user]);
 
   const trendingArticles = articles.filter((article) => {
     if (!article.published_at) return false;
     const pubDate = new Date(article.published_at);
     const today = new Date();
     const diffInDays = (today - pubDate) / (1000 * 60 * 60 * 24);
-    // console.log(diffInDays);
     return diffInDays <= 15;
   });
-
 
   return {
     articles,
@@ -62,7 +70,6 @@ const useFetchArticles = ({ currentPage, selectedCategory,searchQuery }) => {
     totalPages,
     loading,
     trendingArticles,
-
   };
 };
 

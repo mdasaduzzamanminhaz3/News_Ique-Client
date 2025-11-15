@@ -50,7 +50,7 @@ const handleEditArticle = async (data) => {
       await authApiClient.patch(`/api/v1/articles/${id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/article-page"); 
+      navigate("/dashboard/article-page"); 
     } catch (err) {
       console.error("Error updating article:", err.response?.data || err);
     } finally {

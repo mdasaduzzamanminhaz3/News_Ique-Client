@@ -52,7 +52,7 @@ const useFetchCurrentUser = () => {
 };
 
 const SubscriptionPlansPage = () => {
-  const { plans, loading: plansLoading, error } = useFetchPlans();
+  const { plans, loading: plansLoading } = useFetchPlans();
   const { user, loading: userLoading } = useFetchCurrentUser();
   const [isProcessing, setIsProcessing] = useState(false);
 
