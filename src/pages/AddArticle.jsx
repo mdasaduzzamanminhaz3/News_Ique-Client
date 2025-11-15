@@ -141,7 +141,7 @@ const AddArticle = () => {
           <input
             type="file"
             accept="image/*"
-            {...register("image", { required: true })}
+            {...register("image")}
             onChange={(e)=>{handleImageChange(e)
               register('image').onChange(e)
             }}

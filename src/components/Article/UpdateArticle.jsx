@@ -1,41 +1,53 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import authApiClient from "../../services/auth-api-client";
 
 const UpdateArticle = () => {
   const { id } = useParams();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      headline: "",
+      body: "",
+      category: "",
+      is_published: false,
+    },
+  });
   const [prevImage, setPrevImage] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [clearImage, setClearImage] = useState(false);
+useEffect(() => {
+  // fetch categories
+  authApiClient.get("/api/v1/categories/").then((res) => {
+    setCategories(res.data?.results || res.data);
+  });
 
-    useEffect(() => {
-    // fetch categories
-    authApiClient.get("/api/v1/categories/").then(res => {
-      setCategories(res.data?.results || res.data);
+  // fetch existing article
+  authApiClient.get(`/api/v1/articles/${id}/`).then((res) => {
+    const article = res.data;
+    console.log("Backend published_at:", res.data.published_at);
+    reset({
+      headline: article.headline,
+      body: article.body,
+      category: article.category.id,
+      is_published: article.published_at ? true : false,
     });
 
-    // fetch existing article
-    authApiClient.get(`/api/v1/articles/${id}/`).then(res => {
-      const article = res.data;
-      // console.log(article);
-      setValue("headline", article.headline);
-      setValue("body", article.body);
-      setValue("category", article.category.id);
-      setValue("is_published", article.is_published);
-      setPrevImage([article.image]);
-    });
-  }, [id, setValue]);
+    setPrevImage([article.image]);
+  });
+}, [id, reset]);
 
 
-const handleEditArticle = async (data) => {
+  const handleEditArticle = async (data) => {
     setLoading(true);
     try {
       const formData = new FormData();
@@ -43,14 +55,21 @@ const handleEditArticle = async (data) => {
       formData.append("body", data.body);
       formData.append("category", data.category);
       formData.append("is_published", data.is_published ? "true" : "false");
-      if (data.image && data.image.length > 0) {
+      // if (data.image && data.image.length > 0) {
+      //   formData.append("image", data.image[0]);
+      // }
+
+      const hasNewImage = data.image && data.image.length > 0;
+      if (hasNewImage) {
         formData.append("image", data.image[0]);
+      } else if (clearImage && prevImage.length > 0) {
+        formData.append("image", "null");
       }
 
       await authApiClient.patch(`/api/v1/articles/${id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/dashboard/article-page"); 
+      navigate("/dashboard/article-page");
     } catch (err) {
       console.error("Error updating article:", err.response?.data || err);
     } finally {
@@ -60,7 +79,7 @@ const handleEditArticle = async (data) => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target?.files);
-    setPrevImage(files.map(file => URL.createObjectURL(file)));
+    setPrevImage(files.map((file) => URL.createObjectURL(file)));
   };
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">

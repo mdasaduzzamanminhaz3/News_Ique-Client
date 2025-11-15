@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
-import authApiClient from "../services/auth-api-client"; // JWT attach করা client
+import authApiClient from "../services/auth-api-client"; 
 import useAuth from "./useAuth";
 
 const useFetchArticles = ({ currentPage, selectedCategory, searchQuery }) => {
@@ -17,18 +17,18 @@ const useFetchArticles = ({ currentPage, selectedCategory, searchQuery }) => {
       setLoading(true);
       try {
         let url = "";
-        let client = apiClient; // default public client
+        let client = apiClient; 
 
         if (selectedCategory && selectedCategory !== 1) {
           url = `/api/v1/articles/?page=${currentPage}&category_id=${selectedCategory}`;
-          client = authApiClient; // category fetch always needs auth
+          client = authApiClient; 
         } else {
           if (
             user?.subscription?.is_active &&
             user?.subscription?.plan?.name === "Premium"
           ) {
             url = `/api/v1/articles/?page=${currentPage}`;
-            client = authApiClient; // Premium user uses JWT
+            client = authApiClient; 
           } else {
             url = `/api/v1/public_articles/homepage/?page=${currentPage}`;
           }
@@ -36,7 +36,7 @@ const useFetchArticles = ({ currentPage, selectedCategory, searchQuery }) => {
 
         if (searchQuery && searchQuery.trim() !== "") {
           url = `/api/v1/articles/?search=${searchQuery}&page=${currentPage}`;
-          client = authApiClient; // search always private
+          client = authApiClient; 
         }
 
         const res = await client.get(url);

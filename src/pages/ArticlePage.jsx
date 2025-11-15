@@ -39,7 +39,7 @@ const handlePageChange = (newPage) => {
 
   const handleDelete = async (id) => {
     try {
-      await authApiClient.delete(`/api/v1/articles/${id}`);
+      await authApiClient.delete(`/api/v1/articles/${id}/`);
       setArticles((prev) => prev.filter((article) => article.id !== id));
       alert("Article deleted successfully!");
     } catch (error) {
