@@ -19,6 +19,7 @@ const UserList = () => {
     try {
       const res = await authApiClient.get(`/api/v1/users_list/?page=${page}`);
       setUsers(res.data.results);
+      // console.log(res.data.results);
       setTotalPages(Math.ceil(res.data.count / 10));
     } catch (error) {
       console.log(error);
@@ -113,6 +114,7 @@ const UserList = () => {
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
+            <th>Premium</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -135,6 +137,7 @@ const UserList = () => {
                 <td>{user.email}</td>
                 <td>{user.role}</td>
                 <td>{user.is_active ? "Active" : "Inactive"}</td>
+                <td>{user.is_premium ? "Active":"Inactive"}</td>
                 <td className="flex gap-2">
                   <button onClick={() => handleEdit(user.id)} className="btn btn-sm btn-outline btn-primary">
                     Edit
