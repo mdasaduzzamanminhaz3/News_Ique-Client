@@ -25,7 +25,7 @@ const AddArticle = () => {
   //handle image change
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    console.log(files);
+    // console.log(files);
     setPrevImage(
       files.map((file) => 
         URL.createObjectURL(file)
@@ -52,7 +52,7 @@ const AddArticle = () => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Article created",articleRes.data);
+    // console.log("Article created",articleRes.data);
     setSuccessMsg(articleRes.data.message || "Article created successfully!");
 
     }catch(error){

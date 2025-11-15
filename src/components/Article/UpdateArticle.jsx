@@ -25,7 +25,7 @@ const UpdateArticle = () => {
     // fetch existing article
     authApiClient.get(`/api/v1/articles/${id}/`).then(res => {
       const article = res.data;
-      console.log(article);
+      // console.log(article);
       setValue("headline", article.headline);
       setValue("body", article.body);
       setValue("category", article.category.id);

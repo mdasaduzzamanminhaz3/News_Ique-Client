@@ -38,7 +38,7 @@ const useFetchCurrentUser = () => {
       try {
         const response = await authApiClient.get("auth/users/me/");
         setUser(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (err) {
         console.error("Error fetching current user:", err);
       } finally {

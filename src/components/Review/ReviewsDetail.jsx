@@ -13,7 +13,7 @@ const ReviewsDetail = () => {
       setLoading(true);
       try {
         const res = await apiClient.get("/api/v1/reviews/");
-        console.log(res.data.results);
+        // console.log(res.data.results);
         setReviews(res.data.results);
       } catch (error) {
         console.log(error);

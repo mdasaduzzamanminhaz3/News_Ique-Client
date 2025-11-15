@@ -19,7 +19,7 @@ const ReviewSection = () => {
     setLoading(true);
     try {
       const res = await apiClient.get(`/api/v1/articles/${id}/reviews/`);
-      console.log(res.data);
+      // console.log(res.data);
       setReviews(res.data.results);
     } catch (error) {
       console.log(error);
@@ -34,13 +34,13 @@ const ReviewSection = () => {
     }
     // console.log(data);
     try {
-      const res = await authApiClient.post(
+       await authApiClient.post(
         `/api/v1/articles/${id}/reviews/`,
         data
       );
       setMessage("Review Submitted successfully!");
       fetchReviews();
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log(error);
       setMessage("You are not authorized. Please log in first.");

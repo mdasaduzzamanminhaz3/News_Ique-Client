@@ -24,7 +24,7 @@ const CategoryForm = () => {
       const res = await authApiClient.post("/api/v1/categories/", formData);
       setSuccessMsg(res.data.message || "Category Create Successfully!");
       navigate("/dashboard/categories");
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log(data?.message);
       setErrorMsg(data?.message);
