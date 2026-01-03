@@ -3,6 +3,7 @@ import authApiClient from "../../services/auth-api-client";
 import Pagination from "../Article/Pagination";
 import ErrorAlert from "../ErrorAlert";
 import { useNavigate } from "react-router";
+import TableRowSkeleton from "../Skeleton/TableRowSkeleton";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -121,12 +122,11 @@ const UserList = () => {
         <tbody>
           {loading ? (
             <tr>
-              <td
-                colSpan="5"
-                className="text-center py-4 text-gray-500 animate-pulse"
-              >
-                Loading users...
-              </td>
+<>
+                {[...Array(5)].map((_, index) => (
+                  <TableRowSkeleton key={index} />
+                ))}
+              </>
             </tr>
           ) : filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (

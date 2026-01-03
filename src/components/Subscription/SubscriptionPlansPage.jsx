@@ -3,6 +3,7 @@ import { CheckCircle, Zap } from "lucide-react";
 import authApiClient from "../../services/auth-api-client";
 import { Link } from "react-router-dom";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
+import PlanCardSkeleton from "../Skeleton/PlanCardSkeleton";
 
 const useFetchPlans = () => {
   const [plans, setPlans] = useState([]);
@@ -88,7 +89,11 @@ const SubscriptionPlansPage = () => {
   };
 
   if (plansLoading || userLoading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return <div className="text-center py-10"><>
+                {[...Array(3)].map((_, index) => (
+                  <PlanCardSkeleton key={index} />
+                ))}
+              </></div>;
   }
 
   const isPremium = user?.subscription?.plan?.name === "Premium" && user?.subscription?.is_active;

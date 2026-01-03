@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import authApiClient from "../services/auth-api-client";
 import useFetchCategories from "../hooks/useFetctCategories";
+import StatCardSkeleton from "../components/Skeleton/StatCardSkeleton";
 
 export default function Dashboard() {
   const [articles, setArticles] = useState([]);
@@ -92,9 +93,11 @@ export default function Dashboard() {
   return (
     <div>
       {loading ? (
-        <div className="text-center  px-4 py-2 text-gray-500 dark:text-gray-300 text-sm">
-          <span className="loading loading-spinner text-primary loading-xl"></span>
-        </div>
+        <>
+            {[...Array(7)].map((_, i) => (
+              <StatCardSkeleton key={i} />
+            ))}
+          </>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 ">
           <StatCard

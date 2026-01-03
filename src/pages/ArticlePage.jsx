@@ -3,6 +3,7 @@ import authApiClient from "../services/auth-api-client"; // বা apiClient
 import { Link, useNavigate } from "react-router";
 import { formatPublishedDate } from "../components/utils/formatDate";
 import Pagination from "../components/Article/Pagination";
+import SkeletonCard from "../components/Skeleton/SkeletonCard";
 
 const ArticlesPage = () => {
   const [articles, setArticles] = useState([]);
@@ -31,11 +32,11 @@ const ArticlesPage = () => {
       }
     };
     fetchArticles();
-  }, [page,search]);
-  
-const handlePageChange = (newPage) => {
-  setPage(newPage);
-};
+  }, [page, search]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -49,19 +50,25 @@ const handlePageChange = (newPage) => {
 
   return (
     <div className="bg-gradient-to-tr to-blue-50 from-pink-50">
-      
       {/* search bar */}
       <div className="flex justify-center items-center gap-2 py-4">
-    <input type="text" value={search} onChange={(e)=> setSearch(e.target.value)} placeholder="Search articles" className="input input-bordered w-full max-w-md"/>
-    <button className="btn bg-blue-600 text-gray-200">Search</button>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search articles"
+          className="input input-bordered w-full max-w-md"
+        />
+        <button className="btn bg-blue-600 text-gray-200">Search</button>
       </div>
-
 
       <div className="grid gap-2 py-2 grid-cols-1 lg:grid-cols-3 md:grid-cols-2 h-full w-full">
         {loading && (
-          <div className="text-center py-10 text-gray-500 font-semibold animate-pulse">
-            Loading articles...
-          </div>
+          <>
+            {[...Array(6)].map((_, index) => (
+              <SkeletonCard key={index} />
+            ))}
+          </>
         )}
 
         {!loading &&
@@ -129,12 +136,11 @@ const handlePageChange = (newPage) => {
         )}
       </div>
 
-
-<Pagination
-  totalPages={totalPages}
-  currentPage={page}
-  handlePageChange={handlePageChange}
-/>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={page}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 };

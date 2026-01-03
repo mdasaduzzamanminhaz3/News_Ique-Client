@@ -1,3 +1,4 @@
+import StatCardSkeleton from "../Skeleton/StatCardSkeleton";
 import EditForm from "./EditForm";
 
 const Category = ({ categories, error, loading,onEdit,onDelete,onSave,onCancel,editingId }) => {
@@ -8,9 +9,11 @@ const Category = ({ categories, error, loading,onEdit,onDelete,onSave,onCancel,e
 
   if (loading) {
     return (
-      <div className="text-center  px-4 py-2 text-gray-500 dark:text-gray-300 text-sm">
-<span className="loading loading-spinner text-primary loading-xl"></span>
-      </div>
+        <>
+            {[...Array(7)].map((_, i) => (
+              <StatCardSkeleton key={i} />
+            ))}
+          </>
     );
   }
 

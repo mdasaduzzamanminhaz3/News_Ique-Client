@@ -34,7 +34,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
 
   return (
-    <nav className="bg-gradient-to-br to-purple-50 from-blue-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md sticky top-0 z-50 transition-colors duration-300">
+    <nav className="bg-white/30 backdrop-blur-sm dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -49,7 +49,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search news..."
-              className="w-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-l-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-gray-100"
+              className="w-full border border-gray-300 dark:border-gray-700 bg-white/30 dark:bg-gray-800 rounded-l-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-gray-100"
             />
             <button
               onClick={handleSearch}
@@ -68,7 +68,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-md py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="bg-white/30 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-md py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="">Categories</option>
               {categories.map((category) => (
@@ -125,7 +125,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 shadow-md transition-all duration-300">
+        <div className="md:hidden bg-white/30 backdrop-blur-md dark:bg-gray-900 shadow-md transition-all duration-300">
           <div className="px-4 pt-2 pb-4 space-y-3 text-gray-700 dark:text-gray-200">
             {["Home", "Trending", "About"].map((item) => (
               <Link

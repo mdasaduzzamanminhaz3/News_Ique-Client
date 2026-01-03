@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import apiClient from "../../services/api-client";
 import { formatPublishedDate } from "../utils/formatDate";
+import TableRowSkeleton from "../Skeleton/TableRowSkeleton";
 
 const ReviewsDetail = () => {
   const [search, setSearch] = useState("");
@@ -66,9 +67,11 @@ const ReviewsDetail = () => {
       {/* Table */}
       <div className="overflow-x-auto bg-white shadow rounded">
         {loading ? (
-          <div className="text-center  px-4 py-2 text-gray-500 dark:text-gray-300 text-sm">
-            <span className="loading loading-spinner text-primary loading-xl"></span>
-          </div>
+<>
+                {[...Array(5)].map((_, index) => (
+                  <TableRowSkeleton key={index} />
+                ))}
+              </>
         ) : filteredReviews.length === 0 ? (
           <div className="p-6 text-center text-gray-500">No reviews yet.</div>
         ) : (
