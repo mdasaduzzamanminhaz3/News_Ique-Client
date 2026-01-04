@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { formatPublishedDate } from "../utils/formatDate";
 import ErrorAlert from "../ErrorAlert";
 import { Link } from "react-router";
-import SkeletonCard from "./SkeletonCard";
+import SkeletonCard from "../Skeleton/SkeletonCard";
 
 const ArticleList = ({ articles, error }) => {
   const [show, setShow] = useState(false);
