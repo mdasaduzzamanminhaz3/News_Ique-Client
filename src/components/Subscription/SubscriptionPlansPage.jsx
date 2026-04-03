@@ -1,32 +1,29 @@
 import { useState, useEffect } from "react";
-import { CheckCircle, Zap } from "lucide-react";
+import { CheckCircle, Zap, ShieldCheck, Crown, Loader2 } from "lucide-react";
 import authApiClient from "../../services/auth-api-client";
 import { Link } from "react-router-dom";
-import { MdOutlineWorkspacePremium } from "react-icons/md";
 import PlanCardSkeleton from "../Skeleton/PlanCardSkeleton";
 
+// Custom Hooks remain functionally same but refined
 const useFetchPlans = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPlans = async () => {
       setLoading(true);
       try {
         const response = await authApiClient.get("/api/v1/subscriptions_plans/");
-        setPlans(response.data?.results);
+        setPlans(response.data?.results || []);
       } catch (err) {
-        setError("Subscription plans could not be loaded.");
-        console.error("Error fetching subscription plans:", err);
+        console.error("Error fetching plans:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchPlans();
   }, []);
-
-  return { plans, loading, error };
+  return { plans, loading };
 };
 
 const useFetchCurrentUser = () => {
@@ -39,16 +36,14 @@ const useFetchCurrentUser = () => {
       try {
         const response = await authApiClient.get("auth/users/me/");
         setUser(response.data);
-        // console.log(response.data);
       } catch (err) {
-        console.error("Error fetching current user:", err);
+        console.error("Error fetching user:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchUser();
   }, []);
-
   return { user, loading };
 };
 
@@ -64,127 +59,142 @@ const SubscriptionPlansPage = () => {
       const response = await authApiClient.post("/api/v1/payment/initiate", {
         plan_id: planId,
       });
-      if (response.data && response.data.payment_url) {
+      if (response.data?.payment_url) {
         window.location.href = response.data.payment_url;
-      } else {
-        throw new Error("Payment URL not received.");
       }
     } catch (error) {
-      console.error(
-        "Payment initiation failed:",
-        error.response ? error.response.data : error.message
-      );
-      alert("Payment could not be initiated. Please log in and try again.");
+      alert("Payment initiation failed. Please log in again.");
     } finally {
       setIsProcessing(false);
     }
   };
 
   const formatCurrency = (cents) => {
-    const amount = cents / 100;
     return new Intl.NumberFormat("En-BD", {
       style: "currency",
       currency: "BDT",
-    }).format(amount);
+      maximumFractionDigits: 0,
+    }).format(cents / 100);
   };
 
   if (plansLoading || userLoading) {
-    return <div className="text-center py-10"><>
-                {[...Array(3)].map((_, index) => (
-                  <PlanCardSkeleton key={index} />
-                ))}
-              </></div>;
+    return (
+      <div className="max-w-screen-xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[...Array(3)].map((_, i) => <PlanCardSkeleton key={i} />)}
+      </div>
+    );
   }
 
   const isPremium = user?.subscription?.plan?.name === "Premium" && user?.subscription?.is_active;
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-4">
-        Our Premium Subscription Plan
-      </h1>
-      <p className="text-center text-gray-600 dark:text-gray-400 mb-10">
-        Subscribe for exclusive articles, ad-free browsing, and more.
-      </p>
+    <div className="relative min-h-screen bg-[#020617] text-white pt-28 pb-20 overflow-hidden">
+      
+      {/* Background Orbs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-600/10 blur-[120px] rounded-full -z-0"></div>
 
-      {isPremium && (
-        <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6 text-center">
-          <MdOutlineWorkspacePremium /> You are already a Premium subscriber! Enjoy your benefits.
-        </div>
-      )}
-
-      {plans.length === 0 && (
-        <div className="text-center text-gray-500">
-          No subscription plans are currently available.
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {plans.map((plan) => (
-          <div
-            key={plan.id}
-            className={`bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border-2 ${
-              plan.name.includes("Premium")
-                ? "border-blue-500 transform scale-105"
-                : "border-gray-200 dark:border-gray-700"
-            }`}
-          >
-            <div className="flex items-center justify-center">
-              <Zap className="w-8 h-8 text-blue-500 mr-2" />
-              <h2 className="text-2xl font-bold">{plan?.name}</h2>
-            </div>
-
-            <p className="text-center text-2xl font-extrabold my-6 text-blue-600 dark:text-blue-400">
-              {formatCurrency(plan?.price_cents)}
-              <span className="text-xl font-normal text-gray-500">/month</span>
-            </p>
-
-            <div className="space-y-3 mb-8">
-              {plan.features &&
-                Object.entries(plan.features).map(([key, value]) => (
-                  <p
-                    key={key}
-                    className="flex items-start text-gray-700 dark:text-gray-300"
-                  >
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-1" />
-                    <span>
-                      {key
-                        .replace(/_/g, " ")
-                        .replace(/\b\w/g, (c) => c.toUpperCase())}
-                      : {String(value)}
-                    </span>
-                  </p>
-                ))}
-            </div>
-
-            <button
-              onClick={() => handleSubscribe(plan.id)}
-              disabled={isProcessing || isPremium} // Premium হলে disable
-              className={`w-full py-3 rounded-lg text-white font-semibold transition-colors duration-300 
-                ${
-                  isProcessing || isPremium
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
-                }`}
-            >
-              {isPremium
-                ? "Already Subscribed"
-                : isProcessing
-                ? "Processing..."
-                : "Subscribe Now"}
-            </button>
+      <div className="max-w-screen-xl mx-auto px-6 relative z-10">
+        
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6 animate-bounce-slow">
+            <ShieldCheck className="text-blue-400" size={16} />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Secure Checkout</span>
           </div>
-        ))}
-      </div>
+          <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 uppercase italic">
+            Upgrade to <span className="text-blue-500">Premium</span>
+          </h1>
+          <p className="text-gray-500 font-medium max-w-xl mx-auto uppercase tracking-widest text-[11px]">
+            Experience NewsIque without limits. Ad-free browsing, exclusive research, and expert insights.
+          </p>
+        </div>
 
-      <div className="text-center mt-12">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          For payment-related issues or inquiries{" "}
-          <Link to="/contact" className="text-blue-500 hover:underline">
-            get in touch
-          </Link>
-          ।
-        </p>
+        {/* Existing Membership Alert */}
+        {isPremium && (
+          <div className="max-w-2xl mx-auto mb-12 bg-green-500/10 border border-green-500/20 p-6 rounded-3xl flex items-center justify-center gap-4 animate-pulse">
+            <Crown className="text-green-400" size={24} />
+            <p className="text-green-400 font-black text-xs uppercase tracking-widest text-center">
+              You are already a Premium member. Enjoy your elite benefits!
+            </p>
+          </div>
+        )}
+
+        {/* Plans Grid */}
+        <div className="flex flex-wrap justify-center gap-8">
+          {plans.map((plan) => {
+            const isFeatured = plan.name.toLowerCase().includes("premium");
+            return (
+              <div
+                key={plan.id}
+                className={`group relative w-full max-w-sm bg-white/5 backdrop-blur-2xl p-10 rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-2 ${
+                  isFeatured ? "border-blue-500 shadow-2xl shadow-blue-500/20" : "border-white/10"
+                }`}
+              >
+                {isFeatured && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-[9px] font-black uppercase tracking-widest px-6 py-2 rounded-full">
+                    Most Popular
+                  </div>
+                )}
+
+                <div className="flex items-center justify-center mb-8">
+                  <div className={`p-4 rounded-2xl ${isFeatured ? "bg-blue-600 text-white" : "bg-white/5 text-blue-400"}`}>
+                    <Zap size={28} fill={isFeatured ? "white" : "none"} />
+                  </div>
+                </div>
+
+                <h2 className="text-2xl font-black text-center uppercase tracking-tight mb-2 italic">{plan.name}</h2>
+                <div className="flex flex-col items-center mb-10">
+                  <span className="text-4xl font-black text-white">{formatCurrency(plan.price_cents)}</span>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2">Per Month</span>
+                </div>
+
+                {/* Features List */}
+                <div className="space-y-5 mb-12">
+                  {plan.features && Object.entries(plan.features).map(([key, value]) => (
+                    <div key={key} className="flex items-start gap-4">
+                      <div className="mt-1 p-0.5 bg-green-500/20 rounded-md">
+                        <CheckCircle size={14} className="text-green-500" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 leading-tight">
+                        <strong className="text-gray-300 capitalize">{key.replace(/_/g, " ")}:</strong> {String(value)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Subscribe Button */}
+                <button
+                  onClick={() => handleSubscribe(plan.id)}
+                  disabled={isProcessing || isPremium}
+                  className={`relative w-full py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] transition-all overflow-hidden shadow-xl active:scale-95 ${
+                    isPremium 
+                      ? "bg-white/5 text-gray-500 cursor-not-allowed border border-white/10" 
+                      : isFeatured 
+                        ? "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-600/30" 
+                        : "bg-white text-black hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {isProcessing ? <Loader2 size={16} className="animate-spin" /> : null}
+                    {isPremium ? "Active Member" : isProcessing ? "Processing..." : "Unlock Now"}
+                  </span>
+                  
+                  {/* Button Shimmer */}
+                  {!isPremium && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  )}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer Link */}
+        <div className="text-center mt-20">
+          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.3em]">
+            Need help? <Link to="/contact" className="text-blue-500 hover:text-blue-400 transition-colors">Contact Support</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

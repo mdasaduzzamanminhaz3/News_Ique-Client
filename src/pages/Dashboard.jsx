@@ -1,5 +1,5 @@
-import { FiStar, FiUsers } from "react-icons/fi";
-import StatCard from "../components/Dashboard/StatCard";
+import { useEffect, useState } from "react";
+import { FiStar, FiUsers, FiTrendingUp } from "react-icons/fi";
 import {
   MdArticle,
   MdCategory,
@@ -7,126 +7,140 @@ import {
   MdReviews,
   MdUnpublished,
 } from "react-icons/md";
-import { useEffect, useState } from "react";
+import StatCard from "../components/Dashboard/StatCard";
+import StatCardSkeleton from "../components/Skeleton/StatCardSkeleton";
 import apiClient from "../services/api-client";
 import authApiClient from "../services/auth-api-client";
 import useFetchCategories from "../hooks/useFetctCategories";
-import StatCardSkeleton from "../components/Skeleton/StatCardSkeleton";
 
 export default function Dashboard() {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [publishedArticles, setPublishedArticles] = useState([]);
-  const [totalArticle, setTotalArticle] = useState(0);
-  const [users, setUsers] = useState([]);
-  const [avgRating, setAvgRating] = useState(0);
+  const [loading, setLoading] = useState(true);
   const { categories } = useFetchCategories();
-  const [totalReview, setTotalReview] = useState(0);
-  const fetchArticles = async () => {
+  const [stats, setStats] = useState({
+    totalArticles: 0,
+    publishedCount: 0,
+    totalUsers: 0,
+    avgRating: 0,
+    totalReviews: 0,
+  });
+
+  const fetchData = async () => {
     setLoading(true);
     try {
-      let allArticles = [];
-      let nextUrl = "/api/v1/articles/";
+      // Shob API call eksathe run hobe performance baranor jonno
+      const [articlesRes, usersRes, reviewsRes] = await Promise.allSettled([
+        fetchAllPages("/api/v1/articles/", apiClient),
+        fetchAllPages("/auth/users/", authApiClient),
+        authApiClient.get("/api/v1/reviews/"),
+      ]);
 
-      while (nextUrl) {
-        const res = await apiClient.get(nextUrl);
-        allArticles = [...allArticles, ...res.data.results];
-        nextUrl = res.data.next;
-      }
-      setArticles(allArticles);
-      setTotalArticle(allArticles.length);
-      const published = allArticles.filter((article) => !!article.published_at);
-      setPublishedArticles(published);
+      // Processing Articles
+      let allArticles = articlesRes.status === "fulfilled" ? articlesRes.value : [];
+      const published = allArticles.filter((a) => !!a.published_at).length;
+
+      // Processing Users
+      let allUsers = usersRes.status === "fulfilled" ? usersRes.value : [];
+
+      // Processing Reviews
+      let reviewsData = reviewsRes.status === "fulfilled" ? reviewsRes.value.data.results : [];
+      const ratedReviews = reviewsData.filter((r) => typeof r.ratings === "number");
+      const avg = ratedReviews.length > 0 
+        ? ratedReviews.reduce((sum, r) => sum + r.ratings, 0) / ratedReviews.length 
+        : 0;
+
+      setStats({
+        totalArticles: allArticles.length,
+        publishedCount: published,
+        totalUsers: allUsers.length,
+        avgRating: avg,
+        totalReviews: reviewsData.length,
+      });
     } catch (error) {
-      console.log(error);
+      console.error("Dashboard Sync Error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      let allUsers = [];
-      let nextUrl = "/auth/users/";
-
-      while (nextUrl) {
-        const res = await authApiClient.get(nextUrl);
-        allUsers = [...allUsers, ...res.data.results];
-        nextUrl = res.data.next;
-        setUsers(allUsers);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+  // Helper function to handle pagination auto-fetching
+  async function fetchAllPages(url, client) {
+    let results = [];
+    let nextUrl = url;
+    while (nextUrl) {
+      const res = await client.get(nextUrl);
+      results = [...results, ...res.data.results];
+      nextUrl = res.data.next;
     }
-  };
-
-  const fetchReviews = async () => {
-    setLoading(true);
-    try {
-      const res = await authApiClient.get("/api/v1/reviews/");
-      const reviews = res.data.results;
-      const totalr = res.data.results;
-      setTotalReview(totalr.length);
-      const rated = reviews.filter((r) => typeof r.ratings === "number");
-      const avg =
-        rated.length > 0
-          ? rated.reduce((sum, r) => sum + r.ratings, 0) / rated.length
-          : 0;
-
-      setAvgRating(avg);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    return results;
+  }
 
   useEffect(() => {
-    fetchArticles();
-    fetchUsers();
-    fetchReviews();
+    fetchData();
   }, []);
 
   return (
-    <div>
+    <div className="space-y-8 animate-in fade-in duration-700">
+      {/* Welcome Header */}
+      <div>
+        <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter flex items-center gap-3">
+          <FiTrendingUp className="text-blue-500" />
+          System <span className="text-blue-500">Overview</span>
+        </h1>
+        <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-1">
+          NewsIque Intelligence Terminal // Real-time Data
+        </p>
+      </div>
+
       {loading ? (
-        <>
-            {[...Array(7)].map((_, i) => (
-              <StatCardSkeleton key={i} />
-            ))}
-          </>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(7)].map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 ">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             icon={MdArticle}
             title="Total Articles"
-            value={totalArticle}
+            value={stats.totalArticles}
+            color="blue"
           />
           <StatCard
             icon={MdPublishedWithChanges}
-            title="Total Published"
-            value={publishedArticles.length}
+            title="Live Broadcasts"
+            value={stats.publishedCount}
+            color="green"
           />
           <StatCard
             icon={MdUnpublished}
-            title="Unpublished"
-            value={totalArticle - publishedArticles.length}
+            title="Drafts"
+            value={stats.totalArticles - stats.publishedCount}
+            color="yellow"
           />
           <StatCard
             icon={MdCategory}
-            title="Total Category"
+            title="Categories"
             value={categories.length}
+            color="purple"
           />
-          <StatCard icon={FiUsers} title="Total Users" value={users.length} />
+          <StatCard 
+            icon={FiUsers} 
+            title="Active Users" 
+            value={stats.totalUsers} 
+            color="cyan"
+          />
           <StatCard
             icon={FiStar}
-            title="Average Rating"
-            value={avgRating.toFixed(1)}
+            title="Avg Rating"
+            value={stats.avgRating.toFixed(1)}
+            color="orange"
           />
-          <StatCard icon={MdReviews} title="Total Review" value={totalReview} />
+          <StatCard 
+            icon={MdReviews} 
+            title="User Feedback" 
+            value={stats.totalReviews} 
+            color="pink"
+          />
         </div>
       )}
     </div>

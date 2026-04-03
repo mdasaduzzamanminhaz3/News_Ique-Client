@@ -1,1 +1,41 @@
 @import "tailwindcss";
+/* index.css ba BreakingNewsTicker.css e eita add koro */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 30s linear infinite;
+}
+
+.pause {
+  animation-play-state: paused;
+}
+
+@layer base {
+  body {
+    /* Premium Slate Blue Gradient */
+    background: radial-gradient(circle at top right, #1e293b, #0f172a, #020617);
+    color: #f1f5f9;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Scrollbar design to match the theme */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+}

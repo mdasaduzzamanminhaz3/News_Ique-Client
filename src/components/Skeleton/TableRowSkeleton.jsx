@@ -1,28 +1,48 @@
-
 const TableRowSkeleton = () => {
-    return (
-<tr className="border-t animate-pulse">
-      <td className="px-4 py-4">
-        <div className="h-4 bg-gray-200 rounded w-24"></div>
+  return (
+    <tr className="border-b border-white/5 animate-pulse group">
+      {/* Author/User Column */}
+      <td className="px-8 py-6">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-white/10 rounded-full shrink-0"></div>
+          <div className="h-3 bg-white/10 rounded-lg w-24"></div>
+        </div>
       </td>
-      <td className="px-4 py-4">
-        <div className="flex gap-1">
+
+      {/* Rating/Stars Column */}
+      <td className="px-8 py-6">
+        <div className="flex gap-1.5">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-4 w-4 bg-gray-200 rounded-full"></div>
+            <div 
+              key={i} 
+              className="h-3.5 w-3.5 bg-white/5 rounded-md transform rotate-12"
+            ></div>
           ))}
         </div>
       </td>
-      <td className="px-4 py-4">
-        <div className="h-4 bg-gray-200 rounded w-40"></div>
+
+      {/* Article/Headline Column */}
+      <td className="px-8 py-6">
+        <div className="space-y-2">
+          <div className="h-3 bg-blue-500/10 rounded-lg w-32"></div>
+          <div className="h-2 bg-white/5 rounded-lg w-20"></div>
+        </div>
       </td>
-      <td className="px-4 py-4">
-        <div className="h-4 bg-gray-200 rounded w-full"></div>
+
+      {/* Comment/Content Column */}
+      <td className="px-8 py-6">
+        <div className="space-y-2 max-w-md">
+          <div className="h-2.5 bg-white/5 rounded-lg w-full"></div>
+          <div className="h-2.5 bg-white/5 rounded-lg w-[80%]"></div>
+        </div>
       </td>
-      <td className="px-4 py-4">
-        <div className="h-4 bg-gray-200 rounded w-20"></div>
+
+      {/* Date Column */}
+      <td className="px-8 py-6">
+        <div className="h-3 bg-white/10 rounded-lg w-16 ml-auto md:ml-0"></div>
       </td>
     </tr>
-    );
+  );
 };
 
 export default TableRowSkeleton;
